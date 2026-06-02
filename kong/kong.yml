@@ -1,0 +1,33 @@
+_format_version: "3.0"
+
+services:
+  - name: nextjs-app
+    url: http://portofolio:3000
+    routes:
+      - name: nextjs-route
+        paths:
+          - /portofolio
+        strip_path: true
+      - name: nextjs-assets
+        paths:
+          - /_next
+        strip_path: false
+
+    plugins:
+      - name: rate-limiting
+        config:
+          minute: 100
+          policy: local
+
+      - name: response-transformer
+        config:
+          add:
+            headers:
+              - "X-Frame-Options: SAMEORIGIN"
+              - "X-Content-Type-Options: nosniff"
+              - "X-XSS-Protection: 1; mode=block"
+
+      - name: correlation-id
+        config:
+          header_name: Kong-Request-ID
+          generator: uuid
