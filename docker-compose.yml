@@ -20,10 +20,10 @@ services:
     deploy:
       resources:
         limits:
-          memory: 256m
+          memory: 512m
           cpus: "0.5"
         reservations:
-          memory: 128m
+          memory: 256m
     restart: unless-stopped
 
   portofolio:
@@ -41,4 +41,12 @@ services:
           cpus: "0.5"
         reservations:
           memory: 256m
+    restart: unless-stopped
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel --url http://kong:8000
+    depends_on:
+      - kong
     restart: unless-stopped
